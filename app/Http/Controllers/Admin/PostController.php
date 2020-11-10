@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -44,8 +45,13 @@ class PostController extends Controller
         $request->validate([
             "title"=>"required",
             "slug"=>"required | unique:posts",
+            "cover"=>"required | image",
             "content"=>"required"
         ]);
+        
+        $id = Auth::id();
+        $filename_original = $data["cover"]->getClientOriginalName();
+        $path = Storage::disk("public")->putFileAs("image/$id", $data["cover"], $filename_original);
 
         $newPost = new Post;
         $newPost->user_id = Auth::id();

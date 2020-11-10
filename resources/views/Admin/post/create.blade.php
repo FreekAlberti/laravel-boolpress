@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <form action="{{route("posts.store")}}" method="POST">
+    <form action="{{route("posts.store")}}" method="POST" enctype="multipart/form-data">
         
         @csrf
         @method("POST")
@@ -16,12 +16,16 @@
             <input type="text" class="form-control" name="slug" id="slug" placeholder="Enter slug">
         </div>
         <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" class="form-control" accept="image/*" name="cover" id="image" placeholder="Enter image">
+        </div>
+        <div class="form-group">
             <label for="content">Content</label>
             <textarea class="form-control" name="content" id="content" cols="30" rows="10" placeholder="Enter content"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
