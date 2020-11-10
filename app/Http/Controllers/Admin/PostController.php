@@ -39,7 +39,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $request->validate([
+            "title"=>"required",
+            "slug"=>"required | unique:posts",
+            "content"=>"required"
+        ]);
+
+        $newPost = new Post;
+        $newPost->user_id = Auth::id();
+        $newPost->title = $data["title"];
+        $newPost->slug = $data["slug"];
+        $newPost->content = $data["content"];
+        $newPost->save();
+
+        return redirect()->route("posts.index");
     }
 
     /**
