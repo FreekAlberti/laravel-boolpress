@@ -7,6 +7,7 @@
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Content</th>
+            <th scope="col">Cover</th>
             <th scope="col">Author</th>
             <th scope="col">Activities</th>
         </tr>
@@ -16,6 +17,7 @@
             <tr>
             <td>{{$post->title}}</td>
             <td>{{$post->content}}</td>
+            <td><img style="max-width: 200px" src="{{asset("storage/".$post->cover)}}" alt="{{$post->title}}"></td>
             <td>{{$post->user_id}}</td>
             <td>
                 <button type="button" class="btn btn-primary">View</button>
