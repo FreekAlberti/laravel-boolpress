@@ -61,7 +61,7 @@ class PostController extends Controller
         $newPost->content = $data["content"];
         $newPost->save();
 
-        return redirect()->route("posts.index");
+        return redirect()->route("post.index");
     }
 
     /**
@@ -70,9 +70,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        //
+        $post = Post::where("slug", $slug)->first();
+        return view("Admin.post.show", compact("post"));
     }
 
     /**

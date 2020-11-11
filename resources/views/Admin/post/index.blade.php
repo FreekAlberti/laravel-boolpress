@@ -20,9 +20,9 @@
             <td><img style="max-width: 200px" src="{{asset("storage/".$post->cover)}}" alt="{{$post->title}}"></td>
             <td>{{$post->user_id}}</td>
             <td>
-                <button type="button" class="btn btn-primary">View</button>
-                <button type="button" class="btn btn-warning">Edit</button>
-                <button type="button" class="btn btn-danger">Remove</button>
+                <a href="{{route("posts.show", $post->slug)}}" class="btn btn-primary" role="button">View</a>
+                {{-- <a href="{{route("posts.show", $post->slug)}}" class="btn btn-warning" role="button">Edit</a> --}}
+                {{-- <a href="{{route("posts.show", $post->slug)}}" class="btn btn-danger" role="button">Remove</a> --}}
             </td>
             </tr>
             @endforeach
