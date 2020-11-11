@@ -61,7 +61,7 @@ class PostController extends Controller
         $newPost->content = $data["content"];
         $newPost->save();
 
-        return redirect()->route("post.index");
+        return redirect()->route("admin.posts.index");
     }
 
     /**
