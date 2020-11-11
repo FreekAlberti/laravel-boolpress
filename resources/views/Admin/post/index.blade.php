@@ -21,7 +21,7 @@
             <td>{{$post->user_id}}</td>
             <td>
                 <a href="{{route("admin.posts.show", $post->slug)}}" class="btn btn-primary" role="button">View</a>
-                <a href="#" class="btn btn-warning" role="button">Edit</a>
+                <a href="{{route("admin.posts.edit", $post->slug)}}" class="btn btn-warning" role="button">Edit</a>
                 <form action="{{route("admin.posts.destroy", $post)}}" method="POST">
                     @csrf
                     @method("DELETE")

@@ -7,6 +7,7 @@ use App\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
@@ -61,7 +62,7 @@ class PostController extends Controller
         $newPost->content = $data["content"];
         $newPost->save();
 
-        return redirect()->route("admin.posts.index");
+        return redirect()->route("admin.posts.show", $newPost);
     }
 
     /**
@@ -82,9 +83,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        //
+        $post = Post::where("slug", $slug)->first();
+        return view("Admin.post.edit", compact("post"));
     }
 
     /**
@@ -94,9 +96,32 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $post)
     {
-        //
+        $data = $request->all();
+
+        $request->validate([
+            "title"=>"required",
+            "slug"=>[
+                "required",
+                Rule::unique("posts")->ignore($post),
+            ],
+            "cover"=>"required | image",
+            "content"=>"required"
+        ]);
+        
+        $id = Auth::id();
+        $filename_original = $data["cover"]->getClientOriginalName();
+        $path = Storage::disk("public")->putFileAs("image/$id", $data["cover"], $filename_original);
+
+        $post->title = $data["title"];
+        $post->slug = $data["slug"];
+        $post->cover = $data["cover"];
+        $post->content = $data["content"];
+
+        $post->update($data);
+
+        return redirect()->route("admin.posts.show", $post);
     }
 
     /**
