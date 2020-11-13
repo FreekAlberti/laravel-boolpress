@@ -96,32 +96,29 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $post)
+    public function update(Request $request, $slug)
     {
-        $data = $request->all();
+        $post = Post::where('slug', $slug)->first();
 
-        $request->validate([
-            "title"=>"required",
-            "slug"=>[
-                "required",
-                Rule::unique("posts")->ignore($post),
-            ],
-            "cover"=>"required | image",
-            "content"=>"required"
+        $validatedData = $request->validate([
+          'title' => ['required'],
+          'slug' => ['required', Rule::unique("posts")->ignore($post)],
+          'cover' => ['nullable', 'image'],
+          'content' => ['required']
         ]);
-        
-        $id = Auth::id();
-        $filename_original = $data["cover"]->getClientOriginalName();
-        $path = Storage::disk("public")->putFileAs("image/$id", $data["cover"], $filename_original);
 
-        $post->title = $data["title"];
-        $post->slug = $data["slug"];
-        $post->cover = $data["cover"];
-        $post->content = $data["content"];
+        $post->title = $validatedData['title'];
+        $post->slug = $validatedData['slug'];
+        $post->content = $validatedData['content'];
 
-        $post->update($data);
+        if (isset($validatedData['cover'])) {
+          $path = Storage::disk('public')->putFile('image', $validatedData['cover']);
+          $post->cover = $path;
+        }
 
-        return redirect()->route("admin.posts.show", $post);
+        $post->update();
+
+        return redirect()->route('admin.posts.show', $post->slug);
     }
 
     /**
